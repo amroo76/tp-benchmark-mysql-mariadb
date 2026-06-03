@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>TPS by Thread Count - POINT_SELECT</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .tps-delta-container {
+      margin: 40px auto;
+      max-width: 900px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+    }
+    
+    .tps-delta-container h2 {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+    
+    .delta-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 auto;
+    }
+    
+    .delta-table th,
+    .delta-table td {
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      text-align: right;
+    }
+    
+    .delta-table th:first-child,
+    .delta-table td:first-child {
+      text-align: center;
+    }
+  
+    body { font-family: sans-serif; }
+    .chart-container { max-width: 700px; margin: auto; }
+    canvas { width: 100% !important; height: 300px !important; }
+    table { border-collapse: collapse; margin: 10px auto; }
+    th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
+    th { background: #eee; }
+    h3 { text-align: center; margin-top: 10px; }
+.results-grid { display: block; margin: 40px auto; max-width: 900px;}
+.result-box {margin-bottom: 40px; padding: 10px; border: 1px solid #ccc; background: #f9f9f9;}
+</style>
+</head>
+<body>
+  <h2 style="text-align:center;">TPS by Thread Count - POINT_SELECT</h2>
+  <div style="text-align:center; color:#666; margin-top:4px;">parser with tp</div>
+  <div class="chart-container">
+    <canvas id="chart"></canvas>
+  </div>
+  <script>
+    const ctx = document.getElementById('chart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ["4","8","16","32","64","128"],
+        datasets: [
+{
+  label: "Mysql 9.7.0",
+  data: [118339.15,155062.09,206863.1,194872.1,191965.53,158407.27],
+  backgroundColor: "#1f77b4",
+  borderColor: "#1f77b4",
+  fill: false
+}
+,
+{
+  label: "Mariadb 13.0.1-MariaDB-log",
+  data: [104608.53,136009.86,174387.57,171416.97,170322.51,155598.54],
+  backgroundColor: "#d62728",
+  borderColor: "#d62728",
+  fill: false
+}
+,
+{
+  label: "Mariadb 13.0.1-MariaDB-log",
+  data: [96743.86,126619.97,165395.93,171448.42,168264.9,164823.46],
+  backgroundColor: "#2ca02c",
+  borderColor: "#2ca02c",
+  fill: false
+}
+
+]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top' },
+          title:  { display: false }
+        },
+        scales: {
+          x: { title: { display: true, text: 'Thread Count' } },
+          y: { title: { display: true, text: 'TPS' } }
+        }
+      }
+    });
+  </script>
+<div class="tps-delta-container">
+<h2>Comparison: TPS</h2>
+<table class="delta-table">
+<thead><tr><th>Threads</th><th>Mysql 9.7.0</th><th>Mariadb 13.0.1-MariaDB-log</th><th>Mariadb 13.0.1-MariaDB-log</th></tr></thead>
+<tbody>
+<tr><td>4</td><td>118339.150</td><td>104608.530</td><td>96743.860</td></tr>
+<tr><td>8</td><td>155062.090</td><td>136009.860</td><td>126619.970</td></tr>
+<tr><td>16</td><td>206863.100</td><td>174387.570</td><td>165395.930</td></tr>
+<tr><td>32</td><td>194872.100</td><td>171416.970</td><td>171448.420</td></tr>
+<tr><td>64</td><td>191965.530</td><td>170322.510</td><td>168264.900</td></tr>
+<tr><td>128</td><td>158407.270</td><td>155598.540</td><td>164823.460</td></tr>
+</tbody></table>
+</div>
+<div class="tps-delta-container">
+<h3>System Info (per dataset)</h3>
+<table>
+<tr><th>Property</th><th>Mysql 9.7.0</th><th>Mariadb 13.0.1-MariaDB-log</th><th>Mariadb 13.0.1-MariaDB-log</th></tr>
+<tr><td>Host</td><td>amrendra-HP-255R-15-6-inch-G10-Notebook-PC</td><td>amrendra-HP-255R-15-6-inch-G10-Notebook-PC</td><td>amrendra-HP-255R-15-6-inch-G10-Notebook-PC</td></tr>
+<tr><td>CPU</td><td>AMD Ryzen 5 7535U with Radeon Graphics</td><td>AMD Ryzen 5 7535U with Radeon Graphics</td><td>AMD Ryzen 5 7535U with Radeon Graphics</td></tr>
+<tr><td>CPU Count</td><td>12</td><td>12</td><td>12</td></tr>
+<tr><td>Core Count</td><td>6</td><td>6</td><td>6</td></tr>
+<tr><td>Socket Count</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>OS</td><td>Linux</td><td>Linux</td><td>Linux</td></tr>
+<tr><td>RAM</td><td>6.96 GB</td><td>6.96 GB</td><td>6.96 GB</td></tr>
+<tr><td>Disk</td><td>unknown</td><td>unknown</td><td>unknown</td></tr>
+</table>
+</div>
+<h3>Database Info (per dataset)</h3>
+<table>
+<tr><th>Property</th><th>Mysql 9.7.0</th><th>Mariadb 13.0.1-MariaDB-log</th><th>Mariadb 13.0.1-MariaDB-log</th></tr>
+<tr><td>Database Maker</td><td>mysql</td><td><b>mariadb</b></td><td><b>mariadb</b></td></tr>
+<tr><td>Database Version</td><td>9.7.0</td><td><b>13.0.1-MariaDB-log</b></td><td><b>13.0.1-MariaDB-log</b></td></tr>
+<tr><td>Engine</td><td>innodb</td><td>innodb</td><td>innodb</td></tr>
+<tr><td>Install Dir</td><td>/home/amrendra/TAF/database_software_installs/mysql-9.7.0-linux-glibc2.28-x86_64</td><td><b>/home/amrendra/TAF/database_software_installs/mariadb-13.0.1-linux-systemd-x86_64</b></td><td><b>/home/amrendra/TAF/database_software_installs/mariadb-13.0.1-linux-systemd-x86_64</b></td></tr>
+<tr><td>Config File</td><td>/home/amrendra/projects/TP/mysql_simple_2gbp.cnf</td><td><b>/home/amrendra/projects/TP/mariadb_simple_2gbp.cnf</b></td><td><b>/home/amrendra/projects/TP/mariadb_simple_2gbp_tp.cnf</b></td></tr>
+<tr><td>Config Contents</td><td style="font-size:smaller;">innodb_flush_method=O_DIRECT<br>log_bin<br>innodb_file_per_table=1<br>mysqlx_socket=/home/amrendra/TAF/data/mysqlx.sock<br>innodb_redo_log_capacity=2G<br>thread_cache_size=128<br>innodb_read_io_threads=4<br>innodb_monitor_enable='%'<br>innodb_flush_neighbors=0<br>table_open_cache=2048<br>secure-file-priv=/home/amrendra/TAF/tmp/<br>innodb_buffer_pool_size=2G<br>open_files_limit=65535<br>innodb_write_io_threads=4<br>max_connections=200<br>performance_schema=ON<br>(missing)<br>(missing)<br>(missing)</td><td style="font-size:smaller;">innodb_flush_method=O_DIRECT<br>log_bin<br>innodb_file_per_table=1<br><b>(missing)</b><br><b>(missing)</b><br>thread_cache_size=128<br>innodb_read_io_threads=4<br>innodb_monitor_enable='%'<br>innodb_flush_neighbors=0<br>table_open_cache=2048<br>secure-file-priv=/home/amrendra/TAF/tmp/<br>innodb_buffer_pool_size=2G<br>open_files_limit=65535<br>innodb_write_io_threads=4<br>max_connections=200<br>performance_schema=ON<br><b>innodb_log_file_size=2G</b><br><b>innodb_snapshot_isolation=0</b><br><b>(missing)</b></td><td style="font-size:smaller;">innodb_flush_method=O_DIRECT<br>log_bin<br>innodb_file_per_table=1<br><b>(missing)</b><br><b>(missing)</b><br>thread_cache_size=128<br>innodb_read_io_threads=4<br>innodb_monitor_enable='%'<br>innodb_flush_neighbors=0<br>table_open_cache=2048<br><b>(missing)</b><br>innodb_buffer_pool_size=2G<br>open_files_limit=65535<br>innodb_write_io_threads=4<br>max_connections=200<br>performance_schema=ON<br><b>innodb_log_file_size=2G</b><br><b>innodb_snapshot_isolation=0</b><br><b>thread_handling=pool-of-threads</b></td></tr>
+</table>
+<h3>Test Info (per dataset)</h3>
+<table>
+<tr><th>Property</th><th>Mysql 9.7.0</th><th>Mariadb 13.0.1-MariaDB-log</th><th>Mariadb 13.0.1-MariaDB-log</th></tr>
+<tr><td>Test Suite</td><td>sysbench-lua</td><td>sysbench-lua</td><td>sysbench-lua</td></tr>
+<tr><td>Test Name</td><td>POINT_SELECT</td><td>POINT_SELECT</td><td>POINT_SELECT</td></tr>
+<tr><td>Duration</td><td>300</td><td>300</td><td>300</td></tr>
+<tr><td>Iterations</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>Db driver</td><td>mysql</td><td>unknown</td><td>unknown</td></tr>
+<tr><td>Db ps mode</td><td>disable</td><td>disable</td><td>disable</td></tr>
+<tr><td>Debug sysbench</td><td>false</td><td>false</td><td>false</td></tr>
+<tr><td>Intermediate result</td><td>2</td><td>2</td><td>2</td></tr>
+<tr><td>Number of rows</td><td>500000</td><td>500000</td><td>500000</td></tr>
+<tr><td>Number of tables</td><td>8</td><td>8</td><td>8</td></tr>
+<tr><td>Use bmk</td><td>true</td><td>true</td><td>true</td></tr>
+<tr><td>Timestamp</td><td>2026-6-3 12:27:31</td><td>2026-6-3 15:07:13</td><td>2026-6-3 17:41:53</td></tr>
+</table>
+<div class="results-grid"><div class="result-box"><h3>Thread Count: 4</h3>
+<table><tr><th>Metric</th><th>Mysql 9.7.0</th><th>Mariadb 13.0.1-MariaDB-log</th><th>Mariadb 13.0.1-MariaDB-log</th></tr>
+<tr><td>Mean</td><td>118339.15</td><td>104608.53</td><td>96743.86</td></tr>
+<tr><td>Max</td><td>118339.15</td><td>104608.53</td><td>96743.86</td></tr>
+<tr><td>Min</td><td>118339.15</td><td>104608.53</td><td>96743.86</td></tr>
+<tr><td>StdDev</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>CoV</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>Median (p50)</td><td>118339.15</td><td>104608.53</td><td>96743.86</td></tr>
+<tr><td>p95</td><td>118339.15</td><td>104608.53</td><td>96743.86</td></tr>
+<tr><td>p99</td><td>118339.15</td><td>104608.53</td><td>96743.86</td></tr>
+<tr><td>Skewness</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>Iteration 1</td><td>118339.15</td><td>104608.53</td><td>96743.86</td></tr>
+</table>
+</div>
+<div class="result-box"><h3>Thread Count: 8</h3>
+<table><tr><th>Metric</th><th>Mysql 9.7.0</th><th>Mariadb 13.0.1-MariaDB-log</th><th>Mariadb 13.0.1-MariaDB-log</th></tr>
+<tr><td>Mean</td><td>155062.09</td><td>136009.86</td><td>126619.97</td></tr>
+<tr><td>Max</td><td>155062.09</td><td>136009.86</td><td>126619.97</td></tr>
+<tr><td>Min</td><td>155062.09</td><td>136009.86</td><td>126619.97</td></tr>
+<tr><td>StdDev</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>CoV</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>Median (p50)</td><td>155062.09</td><td>136009.86</td><td>126619.97</td></tr>
+<tr><td>p95</td><td>155062.09</td><td>136009.86</td><td>126619.97</td></tr>
+<tr><td>p99</td><td>155062.09</td><td>136009.86</td><td>126619.97</td></tr>
+<tr><td>Skewness</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>Iteration 1</td><td>155062.09</td><td>136009.86</td><td>126619.97</td></tr>
+</table>
+</div>
+<div class="result-box"><h3>Thread Count: 16</h3>
+<table><tr><th>Metric</th><th>Mysql 9.7.0</th><th>Mariadb 13.0.1-MariaDB-log</th><th>Mariadb 13.0.1-MariaDB-log</th></tr>
+<tr><td>Mean</td><td>206863.10</td><td>174387.57</td><td>165395.93</td></tr>
+<tr><td>Max</td><td>206863.10</td><td>174387.57</td><td>165395.93</td></tr>
+<tr><td>Min</td><td>206863.10</td><td>174387.57</td><td>165395.93</td></tr>
+<tr><td>StdDev</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>CoV</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>Median (p50)</td><td>206863.10</td><td>174387.57</td><td>165395.93</td></tr>
+<tr><td>p95</td><td>206863.10</td><td>174387.57</td><td>165395.93</td></tr>
+<tr><td>p99</td><td>206863.10</td><td>174387.57</td><td>165395.93</td></tr>
+<tr><td>Skewness</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>Iteration 1</td><td>206863.10</td><td>174387.57</td><td>165395.93</td></tr>
+</table>
+</div>
+<div class="result-box"><h3>Thread Count: 32</h3>
+<table><tr><th>Metric</th><th>Mysql 9.7.0</th><th>Mariadb 13.0.1-MariaDB-log</th><th>Mariadb 13.0.1-MariaDB-log</th></tr>
+<tr><td>Mean</td><td>194872.10</td><td>171416.97</td><td>171448.42</td></tr>
+<tr><td>Max</td><td>194872.10</td><td>171416.97</td><td>171448.42</td></tr>
+<tr><td>Min</td><td>194872.10</td><td>171416.97</td><td>171448.42</td></tr>
+<tr><td>StdDev</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>CoV</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>Median (p50)</td><td>194872.10</td><td>171416.97</td><td>171448.42</td></tr>
+<tr><td>p95</td><td>194872.10</td><td>171416.97</td><td>171448.42</td></tr>
+<tr><td>p99</td><td>194872.10</td><td>171416.97</td><td>171448.42</td></tr>
+<tr><td>Skewness</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>Iteration 1</td><td>194872.10</td><td>171416.97</td><td>171448.42</td></tr>
+</table>
+</div>
+<div class="result-box"><h3>Thread Count: 64</h3>
+<table><tr><th>Metric</th><th>Mysql 9.7.0</th><th>Mariadb 13.0.1-MariaDB-log</th><th>Mariadb 13.0.1-MariaDB-log</th></tr>
+<tr><td>Mean</td><td>191965.53</td><td>170322.51</td><td>168264.90</td></tr>
+<tr><td>Max</td><td>191965.53</td><td>170322.51</td><td>168264.90</td></tr>
+<tr><td>Min</td><td>191965.53</td><td>170322.51</td><td>168264.90</td></tr>
+<tr><td>StdDev</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>CoV</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>Median (p50)</td><td>191965.53</td><td>170322.51</td><td>168264.90</td></tr>
+<tr><td>p95</td><td>191965.53</td><td>170322.51</td><td>168264.90</td></tr>
+<tr><td>p99</td><td>191965.53</td><td>170322.51</td><td>168264.90</td></tr>
+<tr><td>Skewness</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>Iteration 1</td><td>191965.53</td><td>170322.51</td><td>168264.90</td></tr>
+</table>
+</div>
+<div class="result-box"><h3>Thread Count: 128</h3>
+<table><tr><th>Metric</th><th>Mysql 9.7.0</th><th>Mariadb 13.0.1-MariaDB-log</th><th>Mariadb 13.0.1-MariaDB-log</th></tr>
+<tr><td>Mean</td><td>158407.27</td><td>155598.54</td><td>164823.46</td></tr>
+<tr><td>Max</td><td>158407.27</td><td>155598.54</td><td>164823.46</td></tr>
+<tr><td>Min</td><td>158407.27</td><td>155598.54</td><td>164823.46</td></tr>
+<tr><td>StdDev</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>CoV</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>Median (p50)</td><td>158407.27</td><td>155598.54</td><td>164823.46</td></tr>
+<tr><td>p95</td><td>158407.27</td><td>155598.54</td><td>164823.46</td></tr>
+<tr><td>p99</td><td>158407.27</td><td>155598.54</td><td>164823.46</td></tr>
+<tr><td>Skewness</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>Iteration 1</td><td>158407.27</td><td>155598.54</td><td>164823.46</td></tr>
+</table>
+</div>
+</body></html>
